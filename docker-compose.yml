@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  euron:
+    build: .
+    container_name: euron_container
+    ports:
+      - "8080:8080"
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: euron
+      DATABASE_URL: postgres://admin:admin@localhost/euron
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres_data:
