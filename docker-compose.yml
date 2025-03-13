@@ -1,20 +1,21 @@
-version: "3.8"
 
 services:
-  euron:
-    build: .
-    container_name: euron_container
-    ports:
-      - "8080:8080"
-      - "5432:5432"
+  db:
+    image: postgres:latest
+    container_name: postgres_db
     environment:
-      POSTGRES_USER: admin
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: euron
-      DATABASE_URL: postgres://admin:admin@localhost/euron
+      POSTGRES_DB: referral_db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d referral_db"]
+      interval: 5s
+      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    restart: always
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount the script
 
 volumes:
   postgres_data:

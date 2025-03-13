@@ -8,8 +8,11 @@ use services::user::validate_user_referrals;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
+    println!("Loading environment variables...");
     let pool = db::establish_connection().await;
+    println!("Database connection established!");
 
+    println!("Starting Actix Web server on 0.0.0.0:8080...");
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(pool.clone()))

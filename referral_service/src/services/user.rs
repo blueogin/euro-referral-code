@@ -8,6 +8,7 @@ pub struct ApiResponse {
 }
 
 pub async fn validate_user_referrals(pool: web::Data<PgPool>, user_id: web::Path<String>) -> impl Responder {
+    println!("This is a validate_user_referrals log message! user_id = {}", user_id);
     let count = sqlx::query!("SELECT COUNT(*) as count FROM referrals WHERE user_id = $1", user_id.as_str())
         .fetch_one(pool.get_ref())
         .await;
