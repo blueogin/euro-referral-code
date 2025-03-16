@@ -1,5 +1,5 @@
-# Stage 1: Build the Rust application
-FROM rust:latest AS builder
+
+FROM rust:1.85 AS builder
 
 WORKDIR /app
 COPY . .

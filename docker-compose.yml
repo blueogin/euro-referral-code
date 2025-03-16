@@ -10,12 +10,22 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d referral_db"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d referral_db"]
       interval: 5s
       retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount the script
-
+      
+  referral_service:
+    build:
+      context: referral_service/
+    container_name: referral_service
+    depends_on:
+      - db  # Ensures referral service starts after DB is ready
+    environment:
+      DATABASE_URL: postgres://postgres:admin@db:5432/referral_db  # Use service name 'db' for internal Docker communication
+    ports:
+      - "8080:8080"  # Map the port your referral service uses
 volumes:
   postgres_data:

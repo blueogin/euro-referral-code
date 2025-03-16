@@ -48,13 +48,13 @@ pub async fn store_referral(pool: web::Data<PgPool>, data: web::Json<ReferralReq
     }
 
     // Proceed with storing the referral if the user is eligible
-    let result = sqlx::query!(
-        "INSERT INTO referrals (user_id, referral_code) VALUES ($1, $2) ON CONFLICT (referral_code) DO NOTHING",
-        data.user_id,
-        data.referral_code
+    let result = sqlx::query(
+        "INSERT INTO referrals (user_id, referral_code) VALUES ($1, $2) ON CONFLICT (referral_code) DO NOTHING"
     )
-    .execute(pool.get_ref())
-    .await;
+        .bind(data.user_id.clone())
+        .bind(data.referral_code.clone())
+        .execute(pool.get_ref())
+        .await;
 
     match result {
         Ok(_) => HttpResponse::Ok().json(ApiResponse { message: "Referral stored successfully".to_string() }),
